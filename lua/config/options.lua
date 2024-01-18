@@ -24,7 +24,7 @@ opt.grepprg = "rg --vimgrep"
 opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.laststatus = 3 -- global statusline
-opt.list = true -- Show some invisible characters (tabs...
+opt.list = false -- Show some invisible characters (tabs...
 opt.mouse = "a" -- Enable mouse mode
 opt.number = true -- Print line number
 opt.pumblend = 10 -- Popup blend
@@ -54,10 +54,13 @@ opt.virtualedit = "block" -- Allow cursor to move where there is no text in visu
 opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- Minimum window width
 opt.wrap = false -- Disable line wrap
+
+-- opt.listchars={
+-- }
 -- opt.listchars={tab="."}
-opt.listchars = {
- tab = ". ",
-}
+-- opt.listchars = {
+ -- tab = ". ",
+-- }
 
 
 -- if vim.fn.has("nvim-0.10") == 1 then
