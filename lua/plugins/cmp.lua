@@ -1,4 +1,11 @@
 local cmp = require("cmp")
+-- cmp.event:on("menu_opened", function()
+-- 	vim.b.copilot_suggestion_hidden = true
+-- end)
+
+-- cmp.event:on("menu_closed", function()
+-- 	vim.b.copilot_suggestion_hidden = false
+-- end)
 -- require("codeium").setup({})
 local luasnip = require("luasnip")
 local defaults = require("cmp.config.default")()
@@ -46,11 +53,15 @@ local cmp_kinds = {
 
 vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
 local opts = {
+	performance = {
+		max_view_entries = 7,
+	},
 	completion = {
 		completeopt = "menu,menuone,noinsert",
 	},
-	experimentral = {
+	experimental = {
 		ghost_text = {
+
 			hl_group = "CmpGhostText",
 		},
 	},
@@ -82,13 +93,12 @@ local opts = {
 		end,
 	}),
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp", keyword_length = 2, priority = 100 },
-		{ name = "codeium", priority = 70 },
-
-		{ name = "luasnip", max_item_count = 4, priority = 70 },
+		{ name = "nvim_lsp", max_item_count = 6, keyword_length = 2, priority = 100 },
+		-- { name = "copilot", priority = 85,max_item_count=2 },
+		{ name = "luasnip", max_item_count = 3, priority = 70 },
 		{ name = "path" },
 	}, {
-		{ name = "buffer" },
+		{ name = "buffer", keyword_length = 4, priority = 60, max_item_count = 3 },
 	}),
 	formatting = {
 		format = function(_, item)
@@ -105,3 +115,9 @@ for _, source in ipairs(opts.sources) do
 end
 
 cmp.setup(opts)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "cmp_docs",
+	callback = function()
+		vim.treesitter.start(0, "markdown")
+	end,
+})

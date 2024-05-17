@@ -6,31 +6,6 @@ require("lazyfile").setup()
 local plugins = {
 	{ "folke/lazy.nvim" },
 	{
-		"dustinblackman/oatmeal.nvim",
-		cmd = { "Oatmeal" },
-		keys = {
-			{ "<leader>om", mode = "n", desc = "Start Oatmeal session" },
-		},
-		opts = {
-			backend = "ollama",
-			model = "openhermes2.5-mistral:latest",
-		},
-	},
-	{
-		"sourcegraph/sg.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim", --[[ "nvim-telescope/telescope.nvim ]]
-		},
-		event = { "LazyFile" },
-		-- write a function to sort a list
-
-		config = function()
-			require("sg").setup({})
-		end,
-		-- If you have a recent version of lazy.nvim, you don't need to add this!
-		build = "nvim -l build/init.lua",
-	},
-	{
 		"ThePrimeagen/harpoon",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		branch = "harpoon2",
@@ -51,7 +26,6 @@ local plugins = {
 			"<leader>i",
 		},
 	},
-	-- { "simrat39/rust-tools.nvim", lazy = true },
 	{
 
 		"mfussenegger/nvim-lint",
@@ -68,7 +42,7 @@ local plugins = {
 			{
 				"<leader>cf",
 				function()
-					require("conform").format({ async = true, lsp_fallback = true })
+					require("conform").format({ async = true, lsp_fallback = false })
 				end,
 				mode = "",
 				desc = "Format buffer",
@@ -81,6 +55,7 @@ local plugins = {
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 		end,
 	},
+
 	{
 		"lewis6991/gitsigns.nvim",
 		event = "LazyFile",
@@ -101,19 +76,19 @@ local plugins = {
 				end
 
 
-                -- stylua: ignore start
-                map("n", "]h", gs.next_hunk, "Next Hunk")
-                map("n", "[h", gs.prev_hunk, "Prev Hunk")
-                map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
-                map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
-                map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
-                map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
-                map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
-                map("n", "<leader>ghp", gs.preview_hunk, "Preview Hunk")
-                map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
-                map("n", "<leader>ghd", gs.diffthis, "Diff This")
-                map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
-                map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+        -- stylua: ignore start
+        map("n", "]h", gs.next_hunk, "Next Hunk")
+        map("n", "[h", gs.prev_hunk, "Prev Hunk")
+        map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
+        map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+        map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
+        map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
+        map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
+        map("n", "<leader>ghp", gs.preview_hunk, "Preview Hunk")
+        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
+        map("n", "<leader>ghd", gs.diffthis, "Diff This")
+        map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
 			end,
 		},
 	},
@@ -124,17 +99,18 @@ local plugins = {
 			"nvim-lua/plenary.nvim", -- required
 			"nvim-telescope/telescope.nvim", -- optional
 			"sindrets/diffview.nvim", -- optional
-			-- "ibhagwan/fzf-lua",              -- optional
 		},
 		config = function()
 			require("neogit").setup({})
 			vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>")
+			vim.keymap.set("n", "<leader>gp", "<cmd>Neogit pull<cr>")
+			vim.keymap.set("n", "<leader>gP", "<cmd>Neogit push<cr>")
+			vim.keymap.set("n", "<leader>gB", "<cmd>G blame<cr>")
 		end,
 		keys = {
 			"<leader>gg",
 		},
 	},
-	-- { "nvim-tree/nvim-web-devicons", lazy = true },
 	{ "windwp/nvim-ts-autotag", event = "LazyFile", opts = {} },
 	{
 		"folke/flash.nvim",
@@ -273,39 +249,55 @@ local plugins = {
 		end,
 	},
 	{
-		"echasnovski/mini.completion",
-		event = "LazyFile",
+		"hrsh7th/nvim-cmp",
+		version = false, -- last release is way too old
+		event = "InsertEnter",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+		},
 		config = function()
-			require("mini.completion").setup({
-				lsp_completion = {
-					process_items = function(items, base)
-						_G.args = { items = items, base = base }
-						return MiniCompletion.default_process_items(items, base)
-					end,
-				},
-			})
-
-			local keys = {
-				["cr"] = vim.api.nvim_replace_termcodes("<CR>", true, true, true),
-				["ctrl-y"] = vim.api.nvim_replace_termcodes("<C-y>", true, true, true),
-				["ctrl-y_cr"] = vim.api.nvim_replace_termcodes("<C-y><CR>", true, true, true),
-			}
-
-			_G.cr_action = function()
-				if vim.fn.pumvisible() ~= 0 then
-					-- If popup is visible, confirm selected item or add new line otherwise
-					local item_selected = vim.fn.complete_info()["selected"] ~= -1
-					return item_selected and keys["ctrl-y"] or keys["ctrl-y_cr"]
-				else
-					-- If popup is not visible, use plain `<CR>`. You might want to customize
-					-- according to other plugins. For example, to use 'mini.pairs', replace
-					-- next line with `return require('mini.pairs').cr()`
-					return keys["cr"]
-				end
-			end
-
-			vim.keymap.set("i", "<CR>", "v:lua._G.cr_action()", { expr = true })
+			require("plugins.cmp")
 		end,
+	},
+	{
+		"L3MON4D3/LuaSnip",
+		build = (not jit.os:find("Windows"))
+				and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
+			or nil,
+		dependencies = {
+			{
+				"rafamadriz/friendly-snippets",
+				config = function()
+					require("luasnip.loaders.from_vscode").lazy_load()
+				end,
+			},
+			{
+				"nvim-cmp",
+				dependencies = {
+					"saadparwaiz1/cmp_luasnip",
+				},
+			},
+		},
+		opts = {
+			history = true,
+			delete_check_events = "TextChanged",
+		},
+    -- stylua: ignore
+    keys = {
+      {
+        "<tab>",
+        function()
+          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+        end,
+        expr = true,
+        silent = true,
+        mode = "i",
+      },
+      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
+      { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
+    },
 	},
 	{
 		"stevearc/dressing.nvim",
@@ -313,6 +305,7 @@ local plugins = {
 		init = function()
 			vim.ui.select = function(...)
 				require("lazy").load({ plugins = { "dressing.nvim" } })
+
 				return vim.ui.select(...)
 			end
 			vim.ui.input = function(...)
@@ -362,15 +355,6 @@ local plugins = {
 			"gsd",
 			"gsf",
 		},
-	},
-	{
-		"echasnovski/mini.comment",
-		event = "LazyFile",
-		keys = {
-			"gcc",
-			"gc",
-		},
-		opts = {},
 	},
 	{
 

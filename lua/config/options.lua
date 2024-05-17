@@ -2,12 +2,13 @@ vim.g.mapleader = " "
 
 vim.g.root_spec = { "lsp", { ".git", "lua" }, "cwd" }
 
-vim.g.netrw_banner=0
+vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 0
-vim.g.netrw_winsize=20
-vim.g.netrw_liststyle=3
+vim.g.netrw_winsize = 20
+vim.g.netrw_liststyle = 3
 local opt = vim.opt
-opt.path="**"
+opt.path = "**"
+opt.autoindent = true
 opt.autowrite = true -- Enable auto write
 opt.colorcolumn = "80" -- Enable auto write
 opt.textwidth = 80
@@ -31,9 +32,12 @@ opt.pumblend = 10 -- Popup blend
 opt.pumheight = 10 -- Maximum number of entries in a popup
 opt.relativenumber = true -- Relative line numbers
 opt.scrolloff = 8 -- Lines of context
+-- opt.foldmethod = "expr"
+-- opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- opt.foldnestmax = 1
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 opt.shiftround = true -- Round indent
-opt.shiftwidth = 4 -- Size of an indent
+opt.shiftwidth = 2 -- Size of an indent
 opt.shortmess:append({ W = true, I = true, c = true, C = true })
 -- opt.showmode = false -- Dont show mode since we have a statusline
 opt.sidescrolloff = 8 -- Columns of context
@@ -44,7 +48,7 @@ opt.spelllang = { "en" }
 opt.splitbelow = true -- Put new windows below current
 opt.splitkeep = "screen"
 opt.splitright = true -- Put new windows right of current
-opt.tabstop = 4 -- Number of spaces tabs count for
+opt.tabstop = 2 -- Number of spaces tabs count for
 opt.termguicolors = true -- True color support
 opt.timeoutlen = 300
 opt.undofile = true
@@ -59,9 +63,8 @@ opt.wrap = false -- Disable line wrap
 -- }
 -- opt.listchars={tab="."}
 -- opt.listchars = {
- -- tab = ". ",
+-- tab = ". ",
 -- }
-
 
 -- if vim.fn.has("nvim-0.10") == 1 then
 -- opt.smoothscroll = true
