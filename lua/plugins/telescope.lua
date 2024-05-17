@@ -16,7 +16,7 @@ require("telescope").setup({
 })
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("undo")
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files <cr>")
+vim.keymap.set("n", "<leader>fs", "<cmd>Telescope find_files <cr>")
 vim.keymap.set("n", "<leader><leader>ff", "<cmd>Telescope find_files hidden=true<cr>")
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers <cr>")
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
